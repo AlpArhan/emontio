@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Emontio: Results</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="static/css/style.css" type="text/css" />
+
+</head>
+<body>
+  <p> Results</p>
+  <div id="web_scan_data"></div>
+
+  <p> {{ tone_analysis }} </p>
+  <p> {{ entity_analysis }} </p>
+  <p> {{ sentiment_analysis }} </p>
+
+  <script>
+
+    var rowsToTable = function(tableRows) {
+      var result = "<table>";
+      for (var i = 0; i < tableRows.length; ++i) {
+        result += "<tr>";
+        var row = tableRows[i];
+        for (var j = 0; j < row.length; ++j) {
+          result += "<td>" + row[j] + "</td>";
+        }
+        result += "</tr>";
+      }
+      result += "</table>";
+      return result;
+    };
+    var web_scan_data_div = document.getElementById("web_scan_data");
+    var web_scan_data = {{ scan_web|tojson|safe }};
+    web_scan_data_div.innerHTML = rowsToTable(
+      [["Targeted Website", web_scan_data["targeted_webpage"]],
+       ["Articles Processed", web_scan_data["article_count"]]]);
+  </script>
+
+
+</body>
+</html>

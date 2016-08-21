@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title
+	>Emontio: Sample Program</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" href="static/css/style.css" type="text/css"/>
+</head>
+<link rel="shortcut icon" href="static/images/e-icon.png" />
+
+<body>
+	<div id="background"></div>
+	<div id="content">
+		<div class="section">
+	  	<h1 id = "message">Project Emontio</h1>
+			<p class='description'></p> Emontio scans web, extracts articles, conducts linguistic and sentiment analysis for tone extraction. Project Emontio attempts to give a consultation on how the financial markets may react to news release.
+		</div>
+    <div class="section">
+			<h1>Try the demo, fill in the blanks:</h1>
+			<p>   Enter the Ticker Symbol and Stock Name of the company you want to analyze.
+				Pick the webpage that you want to scan the articles of. Ex: CNN, WSJ, MarketWatch, Bloomberg and etc. </p>
+
+			<form action="/emontio_main_web.py" method="POST">
+	    	<input type="text" name="stock_id" required='required' placeholder="Ticker Symbol">
+	    	<br/>
+	    	<input type="text" name="stock_name" required='required'placeholder="Stock Name">
+	    	<br/>
+				<input type="text" name="web_url" required='required' placeholder="http://...">
+				<br/>
+	    	<input type="submit">
+				<p> Note: All fields are case sensitive. </p>
+	    </form>
+		</div>
+  </div>
+</body>
+</html>

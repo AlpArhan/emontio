@@ -1,0 +1,51 @@
+/* style.css
+ * This file provides css styles.
+ */
+body, html {
+
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light",
+		"Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	color: #ffffff;
+	text-align: center;
+	overflow: hidden;
+}
+
+#background {
+	background-image: url("../../static/images/colorful-triangles-background.jpg");
+ 	position: absolute;
+	background-size: cover;
+	top: -5px;
+	bottom: -5px;
+	left: -5px;
+	right: -5px;
+	width: 105%;
+	height: 105%;
+	z-index: -1;
+	-webkit-filter: blur(1px);
+	-moz-filter: blur(1px);
+	-o-filter: blur(1px);
+	-ms-filter: blur(1px);
+	filter: blur(1px);
+}
+
+#content {
+	padding-top: 20px;
+	padding-left: 100px;
+	padding-right: 100px;
+	padding-bottom: 20px;
+	margin: auto;
+	margin-top: 50px;
+	width: 550px;
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: 15px;
+}
+
+.section {
+	margin-bottom: 80px;
+}
+
+
+h1 {
+	font-weight: bold;
+	font-size: 2em;
+}

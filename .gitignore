@@ -1,0 +1,4 @@
+*.pyc
+.DS_Store
+api_key.txt
+watson_credentials.json
