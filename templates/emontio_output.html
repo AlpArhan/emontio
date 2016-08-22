@@ -3,18 +3,88 @@
 <head>
 	<title>Emontio: Results</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="stylesheet" href="static/css/style.css" type="text/css" />
-
+	<link rel="stylesheet" href="static/css/output.css" type="text/css"/>
 </head>
+<link rel="shortcut icon" href="static/images/e-icon.png" />
 <body>
-  <p> Results</p>
+	<div id=background></div>
+	<div id=content></div>
+  <h2> Results </h2>
   <div id="web_scan_data"></div>
 
-  <p> {{ tone_analysis }} </p>
+  <h2> Tone Analysis </h2>
+  <div id="tone_analysis">
+    <p>Matching articles: <span id="article_list"></span></p>
+    <h3>Emotional Tone</h3>
+    <div id="emotional_tone_table"></div>
+    <h3>Social Tone</h3>
+    <div id="social_tone_table"></div>
+    <h3>Language Tone</h3>
+    <div id="language_tone_table"></div>
+  </div>
+  <h2> Entity Analysis </h2>
   <p> {{ entity_analysis }} </p>
+  <h2> Sentiment Analysis </h2>
   <p> {{ sentiment_analysis }} </p>
-
   <script>
+    var getKeyComponent = function(toneKey) {
+      var components = toneKey.split("_");
+      if (typeof components === "string")
+        return components;
+      return components[0];
+    };
+
+    var toneTypeToEnglish = function(toneKey) {
+      var toneTypeMap = {
+        "analytical": "Analytical",
+        "confident": "Confidence",
+        "disgust": "Disgust",
+        "agreeableness": "Agreeableness",
+        "openness": "Openness",
+        "tentative": "Tentative",
+        "joy": "Joy",
+        "conscientiousness": "Conscientiousness",
+        "sadness": "Sadness",
+        "anger": "Anger",
+        "extraversion": "Extraversion",
+        "fear": "Fear",
+        "neuroticism": "Neuroticism"
+      };
+      var tone = getKeyComponent(toneKey);
+      return toneTypeMap[tone];
+    };
+
+    // Separate the tone analysis results into 3 distinct dictionaries
+    // based on category.
+    var categorizeToneAnalysisResults = function(toneAnalysis) {
+      var result = {"emotional": {}, "social": {}, "language": {}};
+      for (var key in toneAnalysis) {
+        var score = toneAnalysis[key];
+        var key = getKeyComponent(key);
+        switch (key) {
+          case "joy":
+          case "fear":
+          case "sadness":
+          case "disgust":
+          case "anger":
+            result["emotional"][key] = score;
+	    break;
+          case "openness":
+          case "conscientiousness":
+          case "extraversion":
+          case "agreeableness":
+          case "emotional_rage":
+            result["social"][key] = score;
+	    break;
+          case "analytical":
+          case "confidence":
+          case "tentative":
+            result["language"][key] = score;
+            break;
+        }
+      }
+      return result;
+    };
 
     var rowsToTable = function(tableRows) {
       var result = "<table>";
@@ -29,13 +99,48 @@
       result += "</table>";
       return result;
     };
+
+    var formatArticleTitles = function(articleData) {
+      var result = "";
+      for (var i = 0; i < articleData.length; ++i) {
+        result += "<a href=\"";
+        result += articleData[i]["url"];
+        result += "\">";
+        result += articleData[i]["title"];
+        result += "</a>";
+        if (i != articleData.length - 1) result += ", ";
+      }
+      return result;
+    };
+
+    var getToneAnalysisRows = function(toneData) {
+      var rows = [];
+      for (var key in toneData) {
+        rows.push([toneTypeToEnglish(key), toneData[key]]);
+      }
+      return rows;
+    };
+
+    // High level web scan data.
     var web_scan_data_div = document.getElementById("web_scan_data");
     var web_scan_data = {{ scan_web|tojson|safe }};
     web_scan_data_div.innerHTML = rowsToTable(
       [["Targeted Website", web_scan_data["targeted_webpage"]],
        ["Articles Processed", web_scan_data["article_count"]]]);
+
+    // Tone Analysis Results
+    var tone_analysis = {{ tone_analysis|tojson|safe }};
+    var article_list_elem = document.getElementById("article_list");
+    article_list_elem.innerHTML = formatArticleTitles(
+        tone_analysis["successful_articles"]);
+    var tone_avg_data = categorizeToneAnalysisResults(
+        tone_analysis["average_tone_results"]);
+    var tone_categories = ["emotional", "social", "language"];
+    for (var i = 0; i < tone_categories.length; ++i) {
+      var category = tone_categories[i];
+      var elem = document.getElementById(category + "_tone_table");
+      elem.innerHTML = rowsToTable(getToneAnalysisRows(tone_avg_data[category]));
+    }
   </script>
-
-
 </body>
 </html>

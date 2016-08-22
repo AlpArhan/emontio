@@ -1,0 +1,17 @@
+applications:
+- path: .
+  memory: 128M
+  instances: 1
+  domain: mybluemix.net
+  name: Emontio
+  host: Emontio
+  disk_quota: 1024M
+  services:
+  - ToneAnalyzer-jn-emtio
+  - AlchemyAPI_emontio
+  - Document Conversion-emontio
+  
+  
+handlers:
+- script: emontio_main_web.py
+

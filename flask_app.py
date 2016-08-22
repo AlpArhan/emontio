@@ -1,14 +1,18 @@
 from flask import Flask, render_template, request, redirect
 from templates.emontio_main_web import *
 from templates.emontio_main_web import main
+import cf_deployment_tracker
+import os
 
 
+cf_deployment_tracker.track()
 app = Flask(__name__)
+port = int(os.getenv('VCAP_APP_PORT', 8080))
+
 
 @app.route("/")
 def main_web():
     return render_template('index.html')
-
 
 @app.route("/emontio_main_web.py", methods = ['POST'])
 def run_emontio():
@@ -20,7 +24,10 @@ def run_emontio():
         return render_template('index.html' , stock_id=stock_id, stock_name=stock_name, web_url=web_url)
 
     else:
-
+        if "www." not in web_url:
+            web_url ="www." + web_url
+        if not web_url.endswith(".com") == True:
+            web_url = web_url + ".com"
         if not web_url.startswith("http://") == True:
             web_url = "http://" + web_url
 
@@ -29,12 +36,9 @@ def run_emontio():
 
         return render_template('emontio_output.html',
             scan_web=analyzer.result_scan_web,
-            tone_analysis=analyzer.result_tone_reader,
-            entity_analysis=analyzer.result_entity_extraction,
+            tone_analysis=analyzer.results_tone_analyzer,
             sentiment_analysis=analyzer.result_sentiment_analysis)
 
-        #return render_template('emontio_output.html',
-        #    scan_web={"targeted_webpage": "abrs", "article_count": 5})
 
 if __name__ == "__main__":
-  app.run(debug = True)
+  app.run(debug = True, port=port)
