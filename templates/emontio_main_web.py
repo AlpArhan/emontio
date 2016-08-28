@@ -79,7 +79,7 @@ class Emontio_Analyzer(object):
         with open('api_key.txt' , 'r') as f:
             api_key = f.readline().strip()
 
-        #os.system("python templates/alchemyapi.py %i") % api_key
+        os.system("python templates/alchemyapi.py %s" % api_key)
 
     def scan_targeted_web(self):
 
@@ -556,6 +556,7 @@ class Emontio_Analyzer(object):
         execution_time = datetime.now() - startTime
         self.list_time_elapsed.append(execution_time)
 
+        print self.result_sentiment_analysis
 
     def excel_storage(self):
 
@@ -571,7 +572,9 @@ class Emontio_Analyzer(object):
         date_today = datetime.now().strftime("%Y%m%d")
         try:
             current_directory = os.path.dirname(os.path.abspath('__file__'))
-            data_storage_path = current_directory +"/data_formats/data_storage"
+            data_storage_path = current_directory +"/data_storage"
+            if not os.path.exists(data_storage_path):
+                os.mkdir(data_storage_path)
         except Exception as e:
             print "Error ocurred during accessing a path: " + str(e)
         if not os.path.exists(data_storage_path + "/" + self.stock_name):
