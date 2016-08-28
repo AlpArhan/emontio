@@ -30,6 +30,8 @@ def run_emontio():
             web_url = web_url + ".com"
         if not web_url.startswith("http://") == True:
             web_url = "http://" + web_url
+        if web_url.startswith("https://") == True:
+            web_url.replace("https://","http://" )
 
         #execute the python script.
         analyzer = handle_form_submit(stock_id, stock_name, web_url)

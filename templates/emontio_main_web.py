@@ -569,6 +569,8 @@ class Emontio_Analyzer(object):
             web_name = re.search('%s(.*)%s' % (start, end), self.web_url).group(1)
         except AttributeError :
             web_name = re.search('%s(.*)%s' % (start, end), self.web_url)
+            print "WEBNAME : " ,  web_name
+            type(web_name)
         date_today = datetime.now().strftime("%Y%m%d")
         try:
             current_directory = os.path.dirname(os.path.abspath('__file__'))
@@ -577,11 +579,11 @@ class Emontio_Analyzer(object):
                 os.mkdir(data_storage_path)
         except Exception as e:
             print "Error ocurred during accessing a path: " + str(e)
-        if not os.path.exists(data_storage_path + "/" + self.stock_name):
-            os.mkdir(data_storage_path + "/" + self.stock_name)
+        if not os.path.exists(data_storage_path + "/" + str(self.stock_name)):
+            os.mkdir(data_storage_path + "/" + str(self.stock_name))
 
-        if not os.path.exists(data_storage_path + "/" + self.stock_name + "/" + web_name):
-            os.mkdir(data_storage_path + "/" + self.stock_name + "/" + web_name)
+        if not os.path.exists(data_storage_path + "/" + str(self.stock_name) + "/" + str(web_name)):
+            os.mkdir(data_storage_path + "/" + str(self.stock_name) + "/" + str(web_name))
 
         try:
             print "Storing Average Tone Analysis results.."
